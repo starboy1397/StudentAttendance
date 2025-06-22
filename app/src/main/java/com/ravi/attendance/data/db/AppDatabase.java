@@ -22,7 +22,9 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             "attendance_database"
-                    ).allowMainThreadQueries().build();
+                    ).allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
+                            .build();
                 }
             }
         }

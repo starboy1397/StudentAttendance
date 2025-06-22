@@ -8,6 +8,6 @@ public class Absence {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public String dateTime;
-    public String studentId;
+    public int studentId;
 
 }

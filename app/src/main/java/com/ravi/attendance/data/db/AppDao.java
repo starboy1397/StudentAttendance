@@ -34,4 +34,8 @@ public interface AppDao {
 
     @Query("DELETE FROM absences")
     void deleteAllAbsences();
+
+    @Query("DELETE FROM absences WHERE studentId = :studentId")
+    void deleteAbsenceByStudentId(int studentId);
+
 }

@@ -12,12 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ravi.attendance.R;
 import com.ravi.attendance.data.model.StudentStatus;
+import com.ravi.attendance.ui.attendance.AttendanceViewModel;
 
 import java.util.List;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentViewHolder> {
     private List<StudentStatus> studentStatusList;
     private int currentIndex = -1;
+    private final AttendanceViewModel viewModel;
+
+    public StudentAdapter(AttendanceViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
 
     public void setData(List<StudentStatus> list) {
         this.studentStatusList = list;
@@ -28,6 +34,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         this.currentIndex = index;
         notifyDataSetChanged();
     }
+
 
 
     @NonNull
@@ -54,11 +61,21 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
             holder.itemLayout.setBackgroundColor(Color.WHITE);
         }
 
+        holder.switchAbsent.setOnCheckedChangeListener(null); // prevent re-trigger during binding
+        holder.switchAbsent.setChecked(status.isAbsent);
+
         holder.switchAbsent.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            status.isAbsent = isChecked;
+            if (isChecked) {
+                viewModel.markAbsentManually(status);
+                holder.itemLayout.setBackgroundColor(Color.RED);
+            } else {
+                viewModel.unmarkAbsentManually(status);
+                holder.itemLayout.setBackgroundColor(Color.WHITE);
+            }
         });
 
     }
+
 
     @Override
     public int getItemCount() {
