@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.ravi.attendance.R;
 import com.ravi.attendance.data.model.StudentStatus;
 import com.ravi.attendance.databinding.ActivityAttendanceBinding;
 import com.ravi.attendance.ui.adapter.StudentAdapter;
@@ -34,25 +33,28 @@ public class AttendanceActivity extends AppCompatActivity {
 
         viewModel.getStudentStatusList().observe(this, adapter::setData);
         viewModel.getCurrentIndex().observe(this, index ->{
-
-            if (index == null) return;
+            if (index == null || index < 0) {
+                attendanceBinding.tvCurrentStudent.setText("Attendance Complete");
+                return;
+            }
             List<StudentStatus> list = viewModel.getStudentStatusList().getValue();
             if (list == null || index >= list.size()) return;
 
             adapter.setCurrentIndex(index);
             attendanceBinding.recyclerViewStudents.scrollToPosition(index);
 
-            StudentStatus status = viewModel.getStudentStatusList().getValue().get(index);
+
+            StudentStatus status = list.get(index);
             attendanceBinding.tvCurrentStudent.setText("Currently marking: " + status.student.studentName);
 
         });
-
+        attendanceBinding.btnPresent.setOnClickListener(v -> viewModel.markAttendance(false));
+        attendanceBinding.btnAbsent.setOnClickListener(v -> viewModel.markAttendance(true));
         attendanceBinding.btnShowAbsentees.setOnClickListener(v -> {
             Intent intent = new Intent(this, AbsenteesActivity.class);
             startActivity(intent);
         });
-        attendanceBinding.btnPresent.setOnClickListener(v -> viewModel.markAttendance(false));
-        attendanceBinding.btnAbsent.setOnClickListener(v -> viewModel.markAttendance(true));
+
 
     }
 }

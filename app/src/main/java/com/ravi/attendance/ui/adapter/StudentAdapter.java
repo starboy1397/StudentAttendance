@@ -20,7 +20,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
     private List<StudentStatus> studentStatusList;
     private int currentIndex = -1;
     private final AttendanceViewModel viewModel;
-
+//    private boolean isInternalUpdate = false;
     public StudentAdapter(AttendanceViewModel viewModel) {
         this.viewModel = viewModel;
     }
@@ -51,20 +51,24 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentV
         holder.tvSlNo.setText(String.valueOf(position + 1));
         holder.tvName.setText(status.student.studentName);
         holder.tvRoll.setText(status.student.rollNumber);
-        holder.switchAbsent.setChecked(status.isAbsent);
 
-        if (position == currentIndex) {
-            holder.itemLayout.setBackgroundColor(Color.YELLOW);
+        holder.switchAbsent.setOnCheckedChangeListener(null);
+        holder.switchAbsent.setChecked(status.isAbsent);
+        int currentIndex = this.currentIndex;
+        if (status.isAbsent && position == currentIndex) {
+            holder.itemLayout.setBackgroundColor(Color.RED);
         } else if (status.isAbsent) {
             holder.itemLayout.setBackgroundColor(Color.RED);
+        } else if (position == currentIndex && currentIndex != -1) {
+            holder.itemLayout.setBackgroundColor(Color.YELLOW);
         } else {
             holder.itemLayout.setBackgroundColor(Color.WHITE);
         }
 
-        holder.switchAbsent.setOnCheckedChangeListener(null); // prevent re-trigger during binding
-        holder.switchAbsent.setChecked(status.isAbsent);
 
         holder.switchAbsent.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (viewModel.isFromButtonClick()) return;
+
             if (isChecked) {
                 viewModel.markAbsentManually(status);
                 holder.itemLayout.setBackgroundColor(Color.RED);
