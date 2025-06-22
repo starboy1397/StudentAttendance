@@ -1,5 +1,6 @@
 package com.ravi.attendance.ui.attendance;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +47,10 @@ public class AttendanceActivity extends AppCompatActivity {
 
         });
 
+        attendanceBinding.btnShowAbsentees.setOnClickListener(v -> {
+            Intent intent = new Intent(this, AbsenteesActivity.class);
+            startActivity(intent);
+        });
         attendanceBinding.btnPresent.setOnClickListener(v -> viewModel.markAttendance(false));
         attendanceBinding.btnAbsent.setOnClickListener(v -> viewModel.markAttendance(true));
 

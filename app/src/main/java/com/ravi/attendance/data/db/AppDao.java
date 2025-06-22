@@ -38,4 +38,8 @@ public interface AppDao {
     @Query("DELETE FROM absences WHERE studentId = :studentId")
     void deleteAbsenceByStudentId(int studentId);
 
+    @Query("SELECT * FROM students WHERE id = :id")
+    Student getStudentById(int id);
+
+
 }
